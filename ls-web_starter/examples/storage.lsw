@@ -1,0 +1,5 @@
+
+SET best TO 12345
+STORE "hiscore" best
+LOAD "hiscore" INTO got
+PRINT "Loaded hiscore: " + got

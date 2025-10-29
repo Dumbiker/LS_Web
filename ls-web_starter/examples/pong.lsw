@@ -1,0 +1,45 @@
+
+CANVAS SIZE 640 360
+COLOR "black"
+CLEAR
+SET px TO 20
+SET py TO 150
+SET bx TO 320
+SET by TO 180
+SET vx TO -3
+SET vy TO 2
+SET ph TO 60
+SET sp TO 5
+ONKEY DOWN "ArrowUp"   SET py TO py - sp
+ONKEY DOWN "ArrowDown" SET py TO py + sp
+TICK 16
+  COLOR "black"
+  CLEAR
+
+  // paddle
+  COLOR "white"
+  RECT px py 10 ph
+
+  // ball
+  RECT bx by 8 8
+
+  // move ball
+  SET bx TO bx + vx
+  SET by TO by + vy
+  IF by < 0 THEN
+    SET vy TO -vy
+  ENDIF
+  IF by > 352 THEN
+    SET vy TO -vy
+  ENDIF
+
+  // bounce from paddle
+  IF (bx < 30) AND (by > py) AND (by < py + ph) THEN
+    SET vx TO -vx
+  ENDIF
+
+  // wrap
+  IF bx < -8 THEN
+    SET bx TO 640
+  ENDIF
+END

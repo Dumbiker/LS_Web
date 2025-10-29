@@ -1,0 +1,23 @@
+{
+  "name": "ls-web",
+  "version": "0.1.0",
+  "description": "LS-Web: a tiny, browser-first scripting language for games, data storage, and UI on the web.",
+  "type": "module",
+  "main": "src/ls-web.js",
+  "scripts": {
+    "start": "echo 'Open public/index.html in a browser'",
+    "build": "cp src/ls-web.js dist/ls-web.js",
+    "test": "node src/smoke-test.js"
+  },
+  "keywords": [
+    "language",
+    "scripting",
+    "web",
+    "canvas",
+    "ecs",
+    "game",
+    "storage"
+  ],
+  "author": "You",
+  "license": "MIT"
+}

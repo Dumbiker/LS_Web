@@ -1,0 +1,78 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>LS-Web Playground</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+      header { padding: 10px 14px; border-bottom: 1px solid #ddd; display:flex; gap:8px; align-items:center; }
+      #editor { width: 50vw; height: calc(100vh - 60px); border-right:1px solid #ddd; padding: 10px; box-sizing: border-box; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;}
+      #right { display:flex; flex-direction:column; width:50vw; height: calc(100vh - 60px); }
+      #out { flex: 1; overflow:auto; border-bottom:1px solid #ddd; padding:8px; background:#fafafa; }
+      #stage { flex: 1; display:flex; align-items:center; justify-content:center; background:#111; }
+      canvas { background:#000; image-rendering: pixelated; }
+      .row { display:flex; }
+      button { padding:8px 12px; }
+      textarea { resize:none; }
+      .tip { color:#666; font-size: 12px; margin-left:auto;}
+    </style>
+  </head>
+  <body>
+    <header>
+      <button id="run">Run</button>
+      <button id="stop">Stop</button>
+      <button id="clear">Clear Log</button>
+      <a href="../docs/COMMANDS.md" target="_blank">Command List</a>
+      <span class="tip">LS-Web v0.1 • Paste code and press Run</span>
+    </header>
+    <div class="row">
+      <textarea id="editor" spellcheck="false"></textarea>
+      <div id="right">
+        <div id="out"></div>
+        <div id="stage"><canvas id="lsweb-canvas" width="640" height="360"></canvas></div>
+      </div>
+    </div>
+    <script type="module">
+      import { runLSWeb, stopLSWeb, setLogSink } from '../src/ls-web.js';
+      const editor = document.querySelector('#editor');
+      const out = document.querySelector('#out');
+      const runBtn = document.querySelector('#run');
+      const stopBtn = document.querySelector('#stop');
+      const clearBtn = document.querySelector('#clear');
+
+      const sample = `CANVAS SIZE 640 360
+COLOR "black"
+CLEAR
+SET x TO 100
+SET y TO 100
+SET speed TO 4
+ONKEY DOWN "ArrowRight" SET x TO x + speed
+ONKEY DOWN "ArrowLeft"  SET x TO x - speed
+ONKEY DOWN "ArrowUp"    SET y TO y - speed
+ONKEY DOWN "ArrowDown"  SET y TO y + speed
+TICK 16
+  COLOR "white"
+  CLEAR
+  RECT x y 24 24
+END
+`;
+      editor.value = sample;
+
+      setLogSink((msg)=>{
+        const div = document.createElement('div');
+        div.textContent = msg;
+        out.appendChild(div);
+        out.scrollTop = out.scrollHeight;
+      });
+
+      runBtn.onclick = async ()=>{
+        out.innerHTML += "<div>Running...</div>";
+        await runLSWeb(editor.value, document.querySelector('#lsweb-canvas'));
+      };
+      stopBtn.onclick = ()=> stopLSWeb();
+      clearBtn.onclick = ()=> out.innerHTML = "";
+    </script>
+  </body>
+</html>
